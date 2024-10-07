@@ -9,12 +9,12 @@ from torch.utils.data import DataLoader
 class ExampleNet(nn.Module):
     def __init__(self):
         super(ExampleNet, self).__init__()
-        self.fc1 = nn.Linear(2, 3)
-        self.fc2 = nn.Linear(3,1)
+        self.fc1 = nn.Linear(2, 1)
+        self.fc2 = nn.Linear(1,1)
 
     def forward(self, x):
         x = torch.relu(self.fc1(x))
-        x = self.fc2(x)
+        x = torch.relu(self.fc2(x))
         return x
     
 class SimpleDataset(Dataset):
@@ -102,12 +102,6 @@ for epoch in range(epochs):
         loss = criterion(predictions, y)
 
         loss.backward()
-        
-        fc1_grad = model.fc1.weight.grad
-        
-        for i in range(1, 3):
-            for j in range(0, 2):
-                fc1_grad[i][j] = 0
 
         optimizer.step()
 
@@ -119,7 +113,7 @@ plt.plot(SGDlossX, SGDlossY)
 #start from the point with the most loss
 params[0].data[0, 0] = maxc[0]
 params[0].data[0, 1] = maxc[1]
-optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 AdamlossX = [maxc[0]]
 AdamlossY = [maxc[1]]
 
@@ -130,12 +124,6 @@ for epoch in range(epochs):
         loss = criterion(predictions, y)
 
         loss.backward()
-        
-        fc1_grad = model.fc1.weight.grad
-        
-        for i in range(1, 3):
-            for j in range(0, 2):
-                fc1_grad[i][j] = 0
 
         optimizer.step()
 
