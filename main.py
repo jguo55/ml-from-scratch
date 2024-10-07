@@ -2,6 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
+from torch.utils.data import Dataset
+from torch.utils.data import DataLoader
+
 
 class ExampleNet(nn.Module):
     def __init__(self):
@@ -13,14 +16,30 @@ class ExampleNet(nn.Module):
         x = torch.relu(self.fc1(x))
         x = self.fc2(x)
         return x
+    
+class SimpleDataset(Dataset):
+    def __init__(self, points):
+        self.X = torch.randn(points, 2)
+        self.y = torch.randn(points, 1)
+
+    def __len__(self):
+        return len(self.X)
+    
+    def __getitem__(self, index):
+        return self.X[index], self.y[index]
+    
+    def getX(self):
+        return self.X
+    
+    def gety(self):
+        return self.y
 
 model = ExampleNet()
 
 criterion = nn.MSELoss()
 
-#random dataset of datapoints
-X = torch.randn(10, 2)
-y = torch.randn(10, 1)
+dataset = SimpleDataset(10)
+dataloader = DataLoader(dataset, batch_size=1, shuffle=True)
 
 params = list(model.parameters())
 param1_values = np.linspace(-10.0, 10.0, 50) 
@@ -41,8 +60,8 @@ for i, p1 in enumerate(param1_values):
         params[0].data[0, 1] = p2 
         
         # Forward pass
-        predictions = model(X)
-        loss = criterion(predictions, y)  # compute loss
+        predictions = model(dataset.getX())
+        loss = criterion(predictions, dataset.gety())  # compute loss
         
         # Store the loss
         loss_values[i, j] = loss
@@ -72,56 +91,58 @@ epochs = 1000
 #start from the point with the most loss
 params[0].data[0, 0] = maxc[0]
 params[0].data[0, 1] = maxc[1]
-optimizer = torch.optim.SGD(model.parameters(), lr=0.1)
+optimizer = torch.optim.SGD(model.parameters(), lr=0.01)
 SGDlossX = [maxc[0]]
 SGDlossY = [maxc[1]]
 
 for epoch in range(epochs):
-    optimizer.zero_grad()
-    predictions = model(X)
-    loss = criterion(predictions, y)
+    for num, (X, y) in enumerate(dataloader):
+        optimizer.zero_grad()
+        predictions = model(X)
+        loss = criterion(predictions, y)
 
-    loss.backward()
-    
-    fc1_grad = model.fc1.weight.grad
-    
-    for i in range(1, 3):
-        for j in range(0, 2):
-            fc1_grad[i][j] = 0
+        loss.backward()
+        
+        fc1_grad = model.fc1.weight.grad
+        
+        for i in range(1, 3):
+            for j in range(0, 2):
+                fc1_grad[i][j] = 0
 
-    optimizer.step()
+        optimizer.step()
 
-    SGDlossX.append(params[0].data[0, 0].item())
-    SGDlossY.append(params[0].data[0, 1].item())
+        SGDlossX.append(params[0].data[0, 0].item())
+        SGDlossY.append(params[0].data[0, 1].item())
 
-plt.plot(SGDlossX, SGDlossY, marker='o')
+plt.plot(SGDlossX, SGDlossY)
 
 #start from the point with the most loss
 params[0].data[0, 0] = maxc[0]
 params[0].data[0, 1] = maxc[1]
-optimizer = torch.optim.Adam(model.parameters(), lr=0.1)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 AdamlossX = [maxc[0]]
 AdamlossY = [maxc[1]]
 
 for epoch in range(epochs):
-    optimizer.zero_grad()
-    predictions = model(X)
-    loss = criterion(predictions, y)
+    for num, (X, y) in enumerate(dataloader):
+        optimizer.zero_grad()
+        predictions = model(X)
+        loss = criterion(predictions, y)
 
-    loss.backward()
-    
-    fc1_grad = model.fc1.weight.grad
-    
-    for i in range(1, 3):
-        for j in range(0, 2):
-            fc1_grad[i][j] = 0
+        loss.backward()
+        
+        fc1_grad = model.fc1.weight.grad
+        
+        for i in range(1, 3):
+            for j in range(0, 2):
+                fc1_grad[i][j] = 0
 
-    optimizer.step()
+        optimizer.step()
 
-    AdamlossX.append(params[0].data[0, 0].item())
-    AdamlossY.append(params[0].data[0, 1].item())
+        AdamlossX.append(params[0].data[0, 0].item())
+        AdamlossY.append(params[0].data[0, 1].item())
 
-plt.plot(AdamlossX, AdamlossY, marker='o')
+plt.plot(AdamlossX, AdamlossY)
 
 plt.show()
 
