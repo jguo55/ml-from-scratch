@@ -4,6 +4,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import Dataset
 from torch.utils.data import DataLoader
+import copy
 
 
 class ExampleNet(nn.Module):
@@ -34,14 +35,14 @@ class SimpleDataset(Dataset):
     def gety(self):
         return self.y
 
-model = ExampleNet()
+SGDmodel = ExampleNet()
 
 criterion = nn.MSELoss()
 
 dataset = SimpleDataset(10)
 dataloader = DataLoader(dataset, batch_size=1, shuffle=True)
 
-params = list(model.parameters())
+params = list(SGDmodel.parameters())
 param1_values = np.linspace(-10.0, 10.0, 50) 
 param2_values = np.linspace(-10.0, 10.0, 50)
 
@@ -60,7 +61,7 @@ for i, p1 in enumerate(param1_values):
         params[0].data[0, 1] = p2 
         
         # Forward pass
-        predictions = model(dataset.getX())
+        predictions = SGDmodel(dataset.getX())
         loss = criterion(predictions, dataset.gety())  # compute loss
         
         # Store the loss
@@ -75,6 +76,8 @@ for i, p1 in enumerate(param1_values):
 
 
 param1_grid, param2_grid = np.meshgrid(param1_values, param2_values)
+plt.ion() #begin live plotting
+figure, ax = plt.subplots(figsize=(10, 8))
 plt.contourf(param1_grid, param2_grid, loss_values, 20, cmap='viridis')
 plt.colorbar(label='Loss')
 plt.xlabel('Parameter 1')
@@ -82,57 +85,68 @@ plt.ylabel('Parameter 2')
 plt.title('Loss Contour Plot')
 
 #freeze everything except first 2 weights (because thats what we used to plot loss)
-for name, param in model.named_parameters():
+for name, param in SGDmodel.named_parameters():
     if not name == 'fc1.weight':
         param.requires_grad = False
 
-epochs = 1000
+
+ADAMmodel = copy.deepcopy(SGDmodel)
+ADAMparams = list(ADAMmodel.parameters())
 
 #start from the point with the most loss
 params[0].data[0, 0] = maxc[0]
 params[0].data[0, 1] = maxc[1]
-optimizer = torch.optim.SGD(model.parameters(), lr=0.01)
+SGDoptimizer = torch.optim.SGD(SGDmodel.parameters(), lr=0.01)
 SGDlossX = [maxc[0]]
 SGDlossY = [maxc[1]]
 
-for epoch in range(epochs):
+ADAMparams[0].data[0, 0] = maxc[0]
+ADAMparams[0].data[0, 1] = maxc[1]
+ADAMoptimizer = torch.optim.Adam(ADAMmodel.parameters(), lr=0.01)
+AdamlossX = [maxc[0]]
+AdamlossY = [maxc[1]]
+
+SGDLine, = ax.plot(SGDlossX, SGDlossY)
+ADAMLine, = ax.plot(AdamlossX, AdamlossY)
+
+while True:
     for num, (X, y) in enumerate(dataloader):
-        optimizer.zero_grad()
-        predictions = model(X)
-        loss = criterion(predictions, y)
+        SGDoptimizer.zero_grad()
+        SGDpredictions = SGDmodel(X)
+        SGDloss = criterion(SGDpredictions, y)
 
-        loss.backward()
+        SGDloss.backward()
 
-        optimizer.step()
+        SGDoptimizer.step()
 
         SGDlossX.append(params[0].data[0, 0].item())
         SGDlossY.append(params[0].data[0, 1].item())
 
-plt.plot(SGDlossX, SGDlossY)
+        SGDLine.set_xdata(SGDlossX)
+        SGDLine.set_ydata(SGDlossY)
 
-#start from the point with the most loss
-params[0].data[0, 0] = maxc[0]
-params[0].data[0, 1] = maxc[1]
-optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
-AdamlossX = [maxc[0]]
-AdamlossY = [maxc[1]]
+        ADAMoptimizer.zero_grad()
+        ADAMpredictions = ADAMmodel(X)
+        ADAMloss = criterion(ADAMpredictions, y)
 
-for epoch in range(epochs):
-    for num, (X, y) in enumerate(dataloader):
-        optimizer.zero_grad()
-        predictions = model(X)
-        loss = criterion(predictions, y)
+        ADAMloss.backward()
 
-        loss.backward()
+        ADAMoptimizer.step()
 
-        optimizer.step()
+        AdamlossX.append(ADAMparams[0].data[0, 0].item())
+        AdamlossY.append(ADAMparams[0].data[0, 1].item())
 
-        AdamlossX.append(params[0].data[0, 0].item())
-        AdamlossY.append(params[0].data[0, 1].item())
+        SGDLine.set_xdata(SGDlossX)
+        SGDLine.set_ydata(SGDlossY)
 
-plt.plot(AdamlossX, AdamlossY)
+        ADAMLine.set_xdata(AdamlossX)
+        ADAMLine.set_ydata(AdamlossY)
 
-plt.show()
+        figure.canvas.draw()
+        
+        figure.canvas.flush_events()
+
+        plt.pause(0.01)
 
     
 
