@@ -11,11 +11,13 @@ class ExampleNet(nn.Module):
     def __init__(self):
         super(ExampleNet, self).__init__()
         self.fc1 = nn.Linear(2, 1)
-        self.fc2 = nn.Linear(1,1)
+        self.fc2 = nn.Linear(1,3)
+        self.fc3 = nn.Linear(3, 1)
 
     def forward(self, x):
         x = torch.relu(self.fc1(x))
         x = torch.relu(self.fc2(x))
+        x = self.fc3(x)
         return x
     
 class SimpleDataset(Dataset):
@@ -39,7 +41,7 @@ SGDmodel = ExampleNet()
 
 criterion = nn.MSELoss()
 
-dataset = SimpleDataset(10)
+dataset = SimpleDataset(20)
 dataloader = DataLoader(dataset, batch_size=1, shuffle=True)
 
 params = list(SGDmodel.parameters())
@@ -48,11 +50,9 @@ param2_values = np.linspace(-10.0, 10.0, 50)
 
 loss_values = np.zeros((len(param1_values), len(param2_values)))
 
-#store coordinates to place with min and max loss
+#find the highest loss point from -7.5 to 7.5 to start from
 max_loss = -1
-min_loss = 100
 maxc = [0,0]
-minc = [0,0]
 
 for i, p1 in enumerate(param1_values):
     for j, p2 in enumerate(param2_values):
@@ -60,20 +60,14 @@ for i, p1 in enumerate(param1_values):
         params[0].data[0, 0] = p1
         params[0].data[0, 1] = p2 
         
-        # Forward pass
         predictions = SGDmodel(dataset.getX())
-        loss = criterion(predictions, dataset.gety())  # compute loss
+        loss = criterion(predictions, dataset.gety())  
         
-        # Store the loss
         loss_values[i, j] = loss
-
-        if max_loss <= loss:
-            max_loss = loss
-            maxc = [p1, p2]
-        if min_loss >= loss:
-            min_loss = loss
-            minc = [p1, p2]
-
+        if p1 > -7.5 and p1 < 7.5 and p2 > -7.5 and p2 < 7.5:
+            if max_loss <= loss:
+                max_loss = loss
+                maxc = [p1, p2]
 
 param1_grid, param2_grid = np.meshgrid(param1_values, param2_values)
 plt.ion() #begin live plotting
@@ -89,10 +83,6 @@ for name, param in SGDmodel.named_parameters():
     if not name == 'fc1.weight':
         param.requires_grad = False
 
-
-ADAMmodel = copy.deepcopy(SGDmodel)
-ADAMparams = list(ADAMmodel.parameters())
-
 #start from the point with the most loss
 params[0].data[0, 0] = maxc[0]
 params[0].data[0, 1] = maxc[1]
@@ -100,48 +90,53 @@ SGDoptimizer = torch.optim.SGD(SGDmodel.parameters(), lr=0.01)
 SGDlossX = [maxc[0]]
 SGDlossY = [maxc[1]]
 
-ADAMparams[0].data[0, 0] = maxc[0]
-ADAMparams[0].data[0, 1] = maxc[1]
+ADAMmodel = copy.deepcopy(SGDmodel)
 ADAMoptimizer = torch.optim.Adam(ADAMmodel.parameters(), lr=0.01)
 AdamlossX = [maxc[0]]
 AdamlossY = [maxc[1]]
 
-SGDLine, = ax.plot(SGDlossX, SGDlossY)
-ADAMLine, = ax.plot(AdamlossX, AdamlossY)
+Mmodel = copy.deepcopy(SGDmodel)
+Moptimizer = torch.optim.SGD(Mmodel.parameters(), lr=0.01, momentum=0.9)
+MlossX = [maxc[0]]
+MlossY = [maxc[1]]
 
-while True:
+MLine, = ax.plot(MlossX, MlossY, label = 'Momentum')
+ADAMLine, = ax.plot(AdamlossX, AdamlossY, label='Adam')
+SGDLine, = ax.plot(SGDlossX, SGDlossY, label='SGD')
+
+plt.legend(loc="upper left")
+
+def step(X, y, model, optimizer, line, lossesX, lossesY):
+    optimizer.zero_grad()
+    predictions = model(X)
+    loss = criterion(predictions, y)
+
+    loss.backward()
+
+    optimizer.step()
+
+    params = list(model.parameters())
+    lossesX.append(params[0].data[0, 0].item())
+    lossesY.append(params[0].data[0, 1].item())
+
+    line.set_xdata(lossesX)
+    line.set_ydata(lossesY)
+
+def handle_close(evt):
+    global plotopen
+    plotopen = False
+
+figure.canvas.mpl_connect('close_event', handle_close)
+
+plotopen = True
+while plotopen:
     for num, (X, y) in enumerate(dataloader):
-        SGDoptimizer.zero_grad()
-        SGDpredictions = SGDmodel(X)
-        SGDloss = criterion(SGDpredictions, y)
+        step(X, y, SGDmodel, SGDoptimizer, SGDLine, SGDlossX, SGDlossY)
+        step(X, y, ADAMmodel, ADAMoptimizer, ADAMLine, AdamlossX, AdamlossY)
+        step(X, y, Mmodel, Moptimizer, MLine, MlossX, MlossY)
 
-        SGDloss.backward()
-
-        SGDoptimizer.step()
-
-        SGDlossX.append(params[0].data[0, 0].item())
-        SGDlossY.append(params[0].data[0, 1].item())
-
-        SGDLine.set_xdata(SGDlossX)
-        SGDLine.set_ydata(SGDlossY)
-
-        ADAMoptimizer.zero_grad()
-        ADAMpredictions = ADAMmodel(X)
-        ADAMloss = criterion(ADAMpredictions, y)
-
-        ADAMloss.backward()
-
-        ADAMoptimizer.step()
-
-        AdamlossX.append(ADAMparams[0].data[0, 0].item())
-        AdamlossY.append(ADAMparams[0].data[0, 1].item())
-
-        SGDLine.set_xdata(SGDlossX)
-        SGDLine.set_ydata(SGDlossY)
-
-        ADAMLine.set_xdata(AdamlossX)
-        ADAMLine.set_ydata(AdamlossY)
-
+        if(len(SGDlossX) % 10 == 0):
+            print(f"{len(SGDlossX)} iterations")
         figure.canvas.draw()
         
         figure.canvas.flush_events()
