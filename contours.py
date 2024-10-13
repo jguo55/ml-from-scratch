@@ -6,6 +6,7 @@ from torch.utils.data import Dataset
 from torch.utils.data import DataLoader
 import copy
 
+torch.manual_seed(0)
 
 class ExampleNet(nn.Module):
     def __init__(self):
@@ -135,8 +136,6 @@ while plotopen:
         step(X, y, ADAMmodel, ADAMoptimizer, ADAMLine, AdamlossX, AdamlossY)
         step(X, y, Mmodel, Moptimizer, MLine, MlossX, MlossY)
 
-        if(len(SGDlossX) % 10 == 0):
-            print(f"{len(SGDlossX)} iterations")
         figure.canvas.draw()
         
         figure.canvas.flush_events()
