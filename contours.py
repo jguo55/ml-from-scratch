@@ -87,17 +87,17 @@ for name, param in SGDmodel.named_parameters():
 #start from the point with the most loss
 params[0].data[0, 0] = maxc[0]
 params[0].data[0, 1] = maxc[1]
-SGDoptimizer = torch.optim.SGD(SGDmodel.parameters(), lr=0.01)
+SGDoptimizer = torch.optim.SGD(SGDmodel.parameters(), lr=0.1)
 SGDlossX = [maxc[0]]
 SGDlossY = [maxc[1]]
 
 ADAMmodel = copy.deepcopy(SGDmodel)
-ADAMoptimizer = torch.optim.Adam(ADAMmodel.parameters(), lr=0.01)
+ADAMoptimizer = torch.optim.Adam(ADAMmodel.parameters(), lr=0.1)
 AdamlossX = [maxc[0]]
 AdamlossY = [maxc[1]]
 
 Mmodel = copy.deepcopy(SGDmodel)
-Moptimizer = torch.optim.SGD(Mmodel.parameters(), lr=0.01, momentum=0.9)
+Moptimizer = torch.optim.SGD(Mmodel.parameters(), lr=0.1, momentum=0.9)
 MlossX = [maxc[0]]
 MlossY = [maxc[1]]
 
