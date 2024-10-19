@@ -5,7 +5,7 @@ import torch.nn as nn
 from torch.utils.data import Dataset
 from torch.utils.data import DataLoader
 
-torch.manual_seed(6)
+torch.manual_seed(8)
 
 class ExampleNet(nn.Module):
     def __init__(self):
@@ -45,7 +45,7 @@ dataset = SimpleDataset(10)
 dataloader = DataLoader(dataset, batch_size=1, shuffle=True)
 
 params = list(SGDmodel.parameters())
-param1_values = np.linspace(-10.0, 10.0, 50) 
+param1_values = np.linspace(-10.0, 10.0, 1000) 
 
 loss_values = []
 
@@ -69,7 +69,7 @@ for name, param in SGDmodel.named_parameters():
     if not name == 'fc1.weight':
         param.requires_grad = False
 
-params[0].data[0, 0] = -7.5
+params[0].data[0, 0] = 10
 SGDoptimizer = torch.optim.SGD(SGDmodel.parameters(), lr=0.1, momentum=0.9)
 SGDweights = []
 SGDlosses = []
@@ -107,7 +107,3 @@ while plotopen:
     figure.canvas.flush_events()
 
     plt.pause(0.01)
-
-    
-
-
