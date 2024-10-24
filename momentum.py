@@ -5,7 +5,11 @@ import torch.nn as nn
 from torch.utils.data import Dataset
 from torch.utils.data import DataLoader
 
-torch.manual_seed(8)
+#change parameters here
+torch.manual_seed(9)
+model_momentum = 0.9
+learning_rate = 0.1
+weight_intial = 10
 
 class ExampleNet(nn.Module):
     def __init__(self):
@@ -45,7 +49,7 @@ dataset = SimpleDataset(10)
 dataloader = DataLoader(dataset, batch_size=1, shuffle=True)
 
 params = list(SGDmodel.parameters())
-param1_values = np.linspace(-10.0, 10.0, 1000) 
+param1_values = np.linspace(-10.0, 10.0, 100) 
 
 loss_values = []
 
@@ -62,20 +66,20 @@ plt.ion() #begin live plotting
 figure, ax = plt.subplots(figsize=(10, 8))
 ax.plot(param1_values, loss_values)
 plt.xlabel('Parameter 1')
-plt.ylabel('Parameter 2')
+plt.ylabel('Loss')
 
 #freeze everything except first 2 weights (because thats what we used to plot loss)
 for name, param in SGDmodel.named_parameters():
     if not name == 'fc1.weight':
         param.requires_grad = False
 
-params[0].data[0, 0] = 10
-SGDoptimizer = torch.optim.SGD(SGDmodel.parameters(), lr=0.1, momentum=0.9)
+params[0].data[0, 0] = weight_intial
+SGDoptimizer = torch.optim.SGD(SGDmodel.parameters(), lr=learning_rate, momentum=model_momentum)
 #SGDoptimizer = torch.optim.Adam(SGDmodel.parameters(), lr=0.1)
 SGDweights = []
 SGDlosses = []
 
-SGDLine, = ax.plot(SGDweights, SGDlosses, label='SGD')
+SGDLine, = ax.plot(SGDweights, SGDlosses, '.-')
 
 def step(X, y, model, optimizer, line, weights, losses):
     optimizer.zero_grad()

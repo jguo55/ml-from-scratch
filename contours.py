@@ -6,6 +6,7 @@ from torch.utils.data import Dataset
 from torch.utils.data import DataLoader
 import copy
 
+#change parameters here
 torch.manual_seed(0)
 
 class ExampleNet(nn.Module):
