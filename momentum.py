@@ -71,6 +71,7 @@ for name, param in SGDmodel.named_parameters():
 
 params[0].data[0, 0] = 10
 SGDoptimizer = torch.optim.SGD(SGDmodel.parameters(), lr=0.1, momentum=0.9)
+#SGDoptimizer = torch.optim.Adam(SGDmodel.parameters(), lr=0.1)
 SGDweights = []
 SGDlosses = []
 
