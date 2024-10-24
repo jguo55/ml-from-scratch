@@ -2,7 +2,7 @@
 visualization of gradient descent optimization algorithms
 https://arxiv.org/pdf/1609.04747
 
-# Momentum:
+## Momentum:
 
 Loss is plotted at each point of one weight being adjusted.
 One weight being adjusted, then the network trains.
@@ -10,7 +10,7 @@ One weight being adjusted, then the network trains.
 Not sure how effective this example is. Using a higher dimensional input with PCA would work better, but I don't know if it would work.
 
 
-# Contours:
+## Contours:
 
 The loss contours for a random dataset are plotted for a simple network, and then various optimizers are used and compared to one another.
 
