@@ -7,7 +7,9 @@ https://arxiv.org/pdf/1609.04747
 Loss is plotted at each point of one weight being adjusted.
 One weight being adjusted, then the network trains.
 
-Not sure how effective this example is. Using a higher dimensional input with PCA would work better, but I don't know if it would work.
+An online notebook version of this is available here:
+
+https://colab.research.google.com/drive/1aNcuPcGb2CIrixZvgrHkTjXmvu_IEgMt?authuser=1#scrollTo=tI4TsRxyDYFh
 
 
 ## Contours:
