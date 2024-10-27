@@ -9,7 +9,7 @@ One weight being adjusted, then the network trains.
 
 An online notebook version of this is available here:
 
-https://colab.research.google.com/drive/1aNcuPcGb2CIrixZvgrHkTjXmvu_IEgMt?authuser=1#scrollTo=tI4TsRxyDYFh
+https://colab.research.google.com/drive/1aNcuPcGb2CIrixZvgrHkTjXmvu_IEgMt
 
 
 ## Contours:
