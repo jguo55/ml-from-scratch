@@ -11,13 +11,13 @@ class DHNN:
         np.fill_diagonal(self.wmatrix, 0)
         self.wmatrix = self.wmatrix / len(patterns)
 
-    def predict_async(self, state, num_iter=100):
+    def predict_async(self, state, num_iter=1000):
         state = np.array(state).flatten()
         for _ in range(num_iter):
             i = np.random.randint(self.n-1)
             input_sum = np.dot(self.wmatrix[i], state)
             state[i] = 1 if input_sum >= 0 else -1
-        return
+        return state
     
     def display(self, state):
         state = state.reshape(self.dim)
@@ -63,6 +63,6 @@ new = np.array([
     [-1, -1, -1, -1, -1]
 ])
 
-rand = np.random.choice([0,1],size=(6,5))
+rand = np.random.choice([-1,1],size=(6,5))
 
 dhnn.display(dhnn.predict_async(rand))
