@@ -1,65 +1,107 @@
 import numpy as np
-from itertools import combinations
+import matplotlib.pyplot as plt
 
-import numpy as np
+import numpy as np4
 
 # 0
 zero = np.full((10, 10), -1)
-zero[0:10, 0] = zero[0:10, 9] = 1
-zero[0, 1:9] = zero[9, 1:9] = 1
+zero[2, 3:8] = 1        # Top bar
+zero[8, 3:8] = 1        # Bottom bar
+zero[3:8, 3] = 1        # Left vertical
+zero[3:8, 7] = 1        # Right vertical
+
+zero[3, 7] = 1          # Diagonal slash from top-right to bottom-left
+zero[4, 6] = 1
+zero[5, 5] = 1
+zero[6, 4] = 1
+zero[7, 3] = 1
 
 # 1
 one = np.full((10, 10), -1)
 one[0:10, 4] = 1
-one[9, 0:5] = 1
+one[9, 2:7] = 1
+one[1, 3] = 1
+one[2, 2] = 1
 
 # 2
 two = np.full((10, 10), -1)
-two[0, 1:9] = two[4, 1:9] = two[9, 1:9] = 1
-two[5:9, 8] = 1
+two[1, 2:8] = 1      # Top bar
+two[2:4, 7] = 1      # Top right vertical
+two[4, 2:8] = 1      # Middle bar
+two[5:7, 2] = 1      # Bottom left vertical
+two[7, 2:8] = 1      # Bottom bar
 
 # 3
 three = np.full((10, 10), -1)
-three[0, 1:9] = three[4, 1:9] = three[9, 1:9] = 1
-three[5:9, 8] = 1
+three[0, 1:9] = three[4, 1:9] = three[8, 1:9] = 1
+three[0:9, 8] = 1
 
 # 4
 four = np.full((10, 10), -1)
-four[0:5, 4] = 1
-four[5, 0:10] = 1
+four[1:8, 6] = 1      # Right vertical
+four[4, 3:7] = 1      # Horizontal middle bar
+four[1:5, 3] = 1      # Left vertical
 
 # 5
 five = np.full((10, 10), -1)
-five[0, 1:9] = five[4, 1:9] = five[9, 1:9] = 1
-five[1:5, 0] = 1
+five[2, 3:8] = 1        # Top bar
+five[3:5, 3] = 1        # Top-left vertical
+five[5, 3:8] = 1        # Middle bar
+five[6:8, 7] = 1        # Bottom-right vertical
+five[8, 3:8] = 1        # Bottom bar
 
 # 6
 six = np.full((10, 10), -1)
-six[0, 1:9] = six[4, 1:9] = six[9, 1:9] = 1
-six[0:5, 0] = 1
+six[1, 3:8] = 1       # Top bar
+six[2:4, 3] = 1       # Top-left vertical
+six[4, 3:8] = 1       # Middle bar
+six[5:7, 3] = 1       # Bottom-left vertical
+six[5:7, 7] = 1       # Bottom-right vertical
+six[7, 3:8] = 1       # Bottom bar
 
 # 7
 seven = np.full((10, 10), -1)
-seven[0, 1:9] = seven[9, 1:9] = 1
-seven[5:9, 8] = 1
+seven[1, 2:8] = 1    # Top bar
+seven[2, 7] = 1    
+seven[3, 6] = 1    
+seven[4, 5] = 1    
+seven[5, 4] = 1    
+seven[6, 4] = 1    
+seven[7, 4] = 1    
 
 # 8
 eight = np.full((10, 10), -1)
-eight[0, 1:9] = eight[4, 1:9] = eight[9, 1:9] = 1
-eight[5:9, 8] = 1
+eight[1, 2:8] = 1      # Top bar
+eight[2:4, 2] = 1      # Top-left vertical
+eight[4, 2:8] = 1      # Middle bar
+eight[5:7, 2] = 1      # Bottom-left vertical
+eight[7, 2:8] = 1      # Bottom bar
+eight[2:4, 7] = 1      # Top-right vertical
+eight[5:7, 7] = 1      # Bottom-right vertical
 
 # 9
 nine = np.full((10, 10), -1)
-nine[0, 1:9] = nine[4, 1:9] = nine[9, 1:9] = 1
-nine[1:5, 0] = 1
+nine[1, 2:8] = 1       # Top bar
+nine[2:4, 7] = 1       # Top-right vertical
+nine[4, 2:8] = 1       # Middle bar
+nine[5:7, 7] = 1       # Bottom-right vertical
+nine[7, 2:8] = 1       # Bottom bar
+nine[2:4, 2] = 1       # Top-left vertical
 
 # A
 A = np.full((10, 10), -1)
-A[1, 4:6] = A[2, 3:7] = A[3, 2:8] = A[4, 1:9] = A[5, 0:10] = 1
-
+A[1, 3:7] = 1         # Top bar
+A[2:6, 2] = 1         # Left vertical
+A[2:6, 7] = 1         # Right vertical
+A[3, 3:7] = 1         # Middle bar
 # B
 B = np.full((10, 10), -1)
-B[0:10, 0] = B[1, 1:5] = B[2, 1:5] = B[4, 1:5] = B[5, 1:5] = B[9, 1:5] = 1
+B[2:9, 3] = 1         # Left vertical
+B[2, 3:8] = 1          # Top bar
+B[5, 3:8] = 1          # Middle bar
+B[8, 3:8] = 1          # Bottom bar
+B[3:5, 8] = 1          # Top-right vertical
+B[6:8, 8] = 1          # Bottom-right vertical
 
 # C
 C = np.full((10, 10), -1)
@@ -67,138 +109,194 @@ C[0, 1:9] = C[9, 1:9] = C[1:9, 0] = 1
 
 # D
 D = np.full((10, 10), -1)
-D[0:10, 0] = D[1, 1:5] = D[2, 1:5] = D[4, 1:5] = D[5, 1:5] = D[9, 1:5] = 1
+D[2:9, 3] = 1          # Left vertical
+D[2, 3:7] = 1          # Top bar
+D[8, 3:7] = 1          # Bottom bar
+D[3:8, 7] = 1          # Right curve
 
 # E
 E = np.full((10, 10), -1)
-E[0, 1:9] = E[4, 1:9] = E[9, 1:9] = E[1:10, 0] = 1
+E[0, 0:9] = E[4, 1:9] = E[9, 1:9] = E[1:10, 0] = 1
 
 # F
 F = np.full((10, 10), -1)
-F[0, 1:9] = F[4, 1:9] = F[1:10, 0] = 1
+F[0, 0:9] = F[4, 1:9] = F[1:10, 0] = 1
 
 # G
 G = np.full((10, 10), -1)
-G[0, 1:9] = G[9, 1:9] = G[1:9, 0] = G[5, 6:9] = 1
+G[0, 0:9] = G[9, 0:9] = G[1:9, 0] = G[5, 6:9] = 1
+G[5:9, 8] = 1
 
 # H
 H = np.full((10, 10), -1)
-H[0:10, 0] = H[0:10, 9] = H[4, 0:10] = 1
+H[1:9, 1] = H[1:9, 8] = H[4, 1:9] = 1
 
 # I
 I = np.full((10, 10), -1)
-I[0:10, 4] = 1
-I[9, 0:10] = 1
+I[1:9, 5] = 1
+I[9, 2:9] = 1
+I[1, 2:9] = 1
 
 # J
 J = np.full((10, 10), -1)
-J[0:10, 4] = J[9, 0:5] = 1
+J[2, 3:9] = 1          # Top bar
+J[3:8, 6] = 1          # Right vertical
+J[8, 3:7] = 1          # Bottom curve
+J[7:8, 3] = 1          # Bottom-left vertical
 
 # K
 K = np.full((10, 10), -1)
-K[0:10, 0] = K[4, 0:10] = K[9, 0] = 1
+K[2:9, 3] = 1            # Left vertical
+K[4, 5] = 1              # Upper diagonal
+K[3, 6] = 1
+K[2, 7] = 1
+K[6, 5] = 1              # Lower diagonal
+K[7, 6] = 1
+K[8, 7] = 1
+K[5, 3:5] = 1
 
 # L
 L = np.full((10, 10), -1)
-L[0:10, 0] = L[9, 0:10] = 1
+L[0:10, 0] = L[9, 0:8] = 1
 
 # M
 M = np.full((10, 10), -1)
-M[0, 0:10] = M[9, 0:10] = M[4, 0:10] = 1
+M[2:8, 2] = 1            # Left vertical
+M[2:8, 8] = 1            # Right vertical
+M[2, 3] = 1              # Left diagonal peak
+M[3, 4] = 1
+M[4, 5] = 1
+M[3, 6] = 1
+M[2, 7] = 1
 
 # N
 N = np.full((10, 10), -1)
-N[0, 0:10] = N[9, 0:10] = N[4, 0:10] = 1
+N[2:9, 2] = 1           # Left vertical
+N[2:9, 8] = 1           # Right vertical
+N[2, 2] = 1             # Diagonal from top-left to bottom-right
+N[3, 3] = 1
+N[4, 4] = 1
+N[5, 5] = 1
+N[6, 6] = 1
+N[7, 7] = 1
+N[8, 8] = 1
 
 # O
 O = np.full((10, 10), -1)
-O[0, 1:9] = O[9, 1:9] = O[1:9, 0] = O[1:9, 9] = 1
+O[2, 4:7] = 1        # Top bar (shorter for roundness)
+O[3, 3] = 1          # Top-left curve
+O[3, 7] = 1          # Top-right curve
+O[4:7, 2] = 1        # Left vertical
+O[4:7, 8] = 1        # Right vertical
+O[7, 3] = 1          # Bottom-left curve
+O[7, 7] = 1          # Bottom-right curve
+O[8, 4:7] = 1        # Bottom bar
 
 # P
 P = np.full((10, 10), -1)
-P[0, 1:9] = P[4, 1:9] = P[9, 1:9] = P[1:5, 0] = 1
+P[2:9, 3] = 1          # Left vertical
+P[2, 3:8] = 1          # Top bar
+P[5, 3:8] = 1          # Middle bar
+P[3:5, 7] = 1          # Right vertical for the top part
 
 # Q
 Q = np.full((10, 10), -1)
-Q[0, 1:9] = Q[9, 1:9] = Q[1:9, 0] = Q[1:9, 9] = 1
+Q[1, 1:8] = 1        # Top bar
+Q[7, 1:8] = 1        # Bottom bar
+Q[1:7, 1] = 1        # Left vertical
+Q[1:7, 7] = 1        # Right vertical\
+Q[8,7:9] = 1
 
 # R
 R = np.full((10, 10), -1)
-R[0, 1:9] = R[4, 1:9] = R[9, 1:9] = R[1:5, 0] = 1
+R[2:9, 3] = 1          # Left vertical
+R[2, 3:6] = 1          # Top bar
+R[5, 3:6] = 1          # Middle bar
+R[3:5, 6] = 1          # Right vertical for the top part
+R[6, 4] = 1            # Diagonal line for the leg
+R[7, 5] = 1
+R[8, 6] = 1
 
 # S
 S = np.full((10, 10), -1)
-S[0, 1:9] = S[4, 1:9] = S[9, 1:9] = S[1:5, 0] = 1
+S[2, 3:8] = 1          # Top bar
+S[3:5, 3] = 1          # Top-left curve
+S[5, 3:8] = 1          # Middle bar
+S[6:8, 7] = 1          # Bottom-right curve
+S[8, 3:8] = 1          # Bottom bar
 
 # T
 T = np.full((10, 10), -1)
-T[0, 1:9] = T[9, 1:9] = 1
+T[2, 3:8] = 1          # Top bar
+T[2:9, 5] = 1          # Vertical bar in the middle
 
 # U
 U = np.full((10, 10), -1)
-U[0:10, 0] = U[9, 0:10] = U[1:9, 0] = 1
+U[2:9, 2] = 1          # Left vertical
+U[2:9, 8] = 1          # Right vertical
+U[8, 3:8] = 1          # Bottom bar
 
+i=35
 # V
 V = np.full((10, 10), -1)
-V[0, 1:9] = V[9, 1:9] = 1
+V[1:5, 1] = 1            # Left side of V
+V[1:5, 8] = 1            # Right side of V
+V[5, 2] = 1
+V[6, 3] = 1
+V[7, 4] = 1
+V[7, 5] = 1
+V[6, 6] = 1
+V[5, 7] = 1
 
 # W
 W = np.full((10, 10), -1)
-W[0, 0:10] = W[9, 0:10] = W[4, 0:10] = 1
+W[1:8, 1] = 1            # Left side of V
+W[1:8, 9] = 1            # Right side of V
+W[6, 2] = 1
+W[5, 3] = 1
+W[4, 4] = 1
+W[3, 5] = 1
+W[4, 6] = 1
+W[5, 7] = 1
+W[6, 8] = 1
 
 # X
 X = np.full((10, 10), -1)
-X[0, 0:10] = X[9, 0:10] = X[4, 0:10] = 1
+X[2, 3] = 1            # Left diagonal line
+X[3, 4] = 1
+X[4, 5] = 1
+X[5, 6] = 1
+X[6, 7] = 1
+X[6,3] = 1
+X[5,4] = 1
+X[3,6] = 1
+X[2,7] = 1
 
 # Y
 Y = np.full((10, 10), -1)
-Y[0, 1:9] = Y[9, 1:9] = Y[4, 0:10] = 1
+Y[2, 6] = 1            # Top of the Y
+Y[2, 2] = 1            # Top of the Y
+Y[3, 3] = 1            # Left diagonal
+Y[3, 5] = 1            # Right diagonal
+Y[4, 4] = 1            # Vertical stem of Y
+Y[5:8, 4] = 1          # Vertical stem continued down
 
 # Z
 Z = np.full((10, 10), -1)
-Z[0, 1:9] = Z[4, 1:9] = Z[9, 1:9] = 1
-
+Z[2, 3:8] = 1          # Top bar
+Z[3, 7] = 1            # Diagonal line
+Z[4, 6] = 1
+Z[5, 5] = 1
+Z[6, 4] = 1
+Z[7, 3] = 1            # Bottom-left diagonal
+Z[8, 3:8] = 1          # Bottom bar
 
 patterns = [zero, one, two, three, four, five, six, seven, eight, nine, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z]
 pattern_names = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 
             'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 
-M = 5  # Number of patterns in each combo
-N = 100  # Neurons per pattern
-num_pairs = M * (M - 1) / 2
-
-# Track best/worst
-min_score = float('inf')
-max_score = float('-inf')
-min_combo = None
-max_combo = None
-
-# Loop through all 3-pattern combinations
-for combo_indices in combinations(range(len(patterns)), M):
-    combo = [patterns[i] for i in combo_indices]
-    total = 0
-    for i in range(M):
-        for j in range(i + 1, M):
-            raw_dot = np.dot(combo[i].flatten(), combo[j].flatten())
-            norm_dot = abs(raw_dot / N)
-            total += norm_dot
-
-    score = total / num_pairs    
-    if score < min_score:
-        min_score = score
-        min_combo = combo_indices
-
-    if score > max_score:
-        max_score = score
-        max_combo = combo_indices
-
-    #print(f"Combo {combo_indices}: {score:.4f}")
-
-# Final results
-print("\nLowest Orthogonality Index:")
-print(f"Combo indices: {min_combo} — Score: {min_score:.4f}")
-
-print("\nHighest Orthogonality Index:")
-print(f"Combo indices: {max_combo} — Score: {max_score:.4f}")
-
+#for i in range(len(patterns)):
+#plt.imshow(patterns[i], cmap='coolwarm', interpolation='none')
+#plt.title(pattern_names[i])
+#plt.show()

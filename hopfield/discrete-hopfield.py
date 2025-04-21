@@ -1,4 +1,5 @@
 import numpy as np
+from dhnnpatterns import patterns, pattern_names
 
 class DHNN:
     def __init__(self, patterns):
@@ -24,45 +25,12 @@ class DHNN:
         for row in state:
             print('[ ' + ''.join('* ' if val == 1 else '  ' for val in row) + ']')
 
-zero = np.array([
-    [-1, 1, 1, 1, -1],
-    [1, -1, -1, -1, 1],
-    [1, -1, -1, -1, 1],
-    [1, -1, -1, -1, 1],
-    [1, -1, -1, -1, 1],
-    [-1, 1, 1, 1, -1]
-])
+indices = [16, 6, 30, 32, 14, 0, 18, 3, 26, 12, 11, 8, 15, 23, 17]
+candidates = [patterns[i] for i in indices]
 
-one = np.array([
-    [-1, 1, 1, -1, -1],
-    [-1, -1, 1, -1, -1],
-    [-1, -1, 1, -1, -1],
-    [-1, -1, 1, -1, -1],
-    [-1, -1, 1, -1, -1],
-    [-1, -1, 1, -1, -1]
-])
+print(candidates)
+dhnn = DHNN(candidates)
 
-two = np.array([
-    [1, 1, 1, -1, -1],
-    [-1, -1, -1, 1, -1],
-    [-1, -1, -1, 1, -1],
-    [-1, 1, 1, -1, -1],
-    [1, -1, -1, -1, -1],
-    [1, 1, 1, 1, 1]
-])
-
-patterns = [zero, one, two]
-dhnn = DHNN(patterns)
-
-new = np.array([
-    [-1, -1, -1, 1, 1],
-    [1, 1, 1, -1, 1],
-    [-1, -1, -1, 1, -1],
-    [1, -1, -1, 1, 1],
-    [1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1]
-])
-
-rand = np.random.choice([-1,1],size=(6,5))
+rand = np.random.choice([-1,1],size=(10,10))
 
 dhnn.display(dhnn.predict_async(rand))

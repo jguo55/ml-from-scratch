@@ -1,5 +1,4 @@
 import numpy as np
-import random
 from dhnnpatterns import patterns, pattern_names
 
 def orthogonality_index(indices, N=100):
@@ -12,47 +11,45 @@ def orthogonality_index(indices, N=100):
             total += abs(np.dot(a, b) / N)
     return total / (M * (M - 1) / 2)
 
-def simulated_annealing(pattern_count=5, max_iter=10000, temp_start=1.0, temp_end=0.001, alpha=0.995):
-    N = 100  # neurons
+def greedy_pattern_selection(target_size=15):
+    N = 100
     all_indices = list(range(len(patterns)))
 
-    # Initial random selection
-    current_indices = random.sample(all_indices, pattern_count)
-    current_score = orthogonality_index(current_indices, N)
-    best_indices = list(current_indices)
-    best_score = current_score
-    temperature = temp_start
+    # Step 1: Start with the pattern with lowest average dot product vs others
+    avg_scores = []
+    for i in all_indices:
+        total = 0
+        for j in all_indices:
+            if i != j:
+                a = patterns[i].flatten()
+                b = patterns[j].flatten()
+                total += abs(np.dot(a, b) / N)
+        avg_scores.append((i, total / (len(all_indices) - 1)))
+    seed = min(avg_scores, key=lambda x: x[1])[0]
+    selected = [seed]
 
-    for iter in range(max_iter):
-        # Propose a new neighbor by swapping one pattern
-        new_indices = list(current_indices)
-        out_idx = random.choice(new_indices)
-        remaining = list(set(all_indices) - set(new_indices))
-        in_idx = random.choice(remaining)
-        new_indices[new_indices.index(out_idx)] = in_idx
+    # Step 2: Greedily grow the set
+    while len(selected) < target_size:
+        best_candidate = None
+        best_score = float('inf')
+        for idx in all_indices:
+            if idx in selected:
+                continue
+            temp = selected + [idx]
+            score = orthogonality_index(temp, N)
+            if score < best_score:
+                best_score = score
+                best_candidate = idx
+        selected.append(best_candidate)
+        print(f"Added {pattern_names[best_candidate]:<5} (index {best_candidate}) — New score: {best_score:.4f} — N={len(selected)}")
 
-        new_score = orthogonality_index(new_indices, N)
+    final_score = orthogonality_index(selected, N)
+    return selected, final_score
 
-        # Acceptance condition
-        delta = new_score - current_score
-        if delta < 0 or random.random() < np.exp(-delta / temperature):
-            current_indices = new_indices
-            current_score = new_score
-            if new_score < best_score:
-                best_score = new_score
-                best_indices = new_indices
+# Run the greedy selection
+indices, score = greedy_pattern_selection(target_size=15)
+print("\nFinal Greedy Selection:")
+print("Indices:", indices)
+print("Names:", [pattern_names[i] for i in indices])
+print("Orthogonality Index:", score)
 
-        # Cooling
-        temperature = max(temp_end, temperature * alpha)
-
-        if iter % 500 == 0 or iter == max_iter - 1:
-            print(f"Iter {iter}, Current Score: {current_score:.4f}, Best: {best_score:.4f}")
-
-    return best_indices, best_score
-
-# Run it
-best_indices, best_score = simulated_annealing()
-print("\nBest Combo:")
-print("Indices:", best_indices)
-print("Names:", [pattern_names[i] for i in best_indices])
-print("Orthogonality Index:", best_score)
