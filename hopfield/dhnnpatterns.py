@@ -1,185 +1,207 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-import numpy as np4
-
 # 0
 zero = np.full((10, 10), -1)
-zero[2, 3:8] = 1        # Top bar
-zero[8, 3:8] = 1        # Bottom bar
-zero[3:8, 3] = 1        # Left vertical
-zero[3:8, 7] = 1        # Right vertical
+zero[0, 0:7] = 1        # Top bar
+zero[9, 0:7] = 1        # Bottom bar
+zero[0:9, 0] = 1        # Left vertical
+zero[0:10, 7] = 1        # Right vertical
 
-zero[3, 7] = 1          # Diagonal slash from top-right to bottom-left
-zero[4, 6] = 1
-zero[5, 5] = 1
-zero[6, 4] = 1
-zero[7, 3] = 1
+zero[2, 6] = 1          # Diagonal slash from top-right to bottom-left
+zero[3, 5] = 1
+zero[4, 4] = 1
+zero[5, 3] = 1
+zero[6, 2] = 1
+zero[7, 1] = 1
 
 # 1
 one = np.full((10, 10), -1)
-one[0:10, 4] = 1
-one[9, 2:7] = 1
-one[1, 3] = 1
-one[2, 2] = 1
+one[0:10, 7] = 1
+one[0:10, 6] = 1
+one[9, 4:10] = 1
+one[8, 4:10] = 1
+one[0, 6] = 1
+one[1, 5] = 1
+one[1, 6] = 1
+one[2, 5] = 1
+one[2, 6] = 1
+one[2, 4] = 1
 
 # 2
 two = np.full((10, 10), -1)
-two[1, 2:8] = 1      # Top bar
-two[2:4, 7] = 1      # Top right vertical
-two[4, 2:8] = 1      # Middle bar
-two[5:7, 2] = 1      # Bottom left vertical
-two[7, 2:8] = 1      # Bottom bar
+two[8, 4:9] = 1      # Bottom bar
+two[7, 4] = 1
+two[6, 5] = 1
+two[5, 6] = 1
+two[4, 7] = 1
+two[3, 8] = 1
+two[2, 8] = 1
+two[1, 5:8] = 1
+two[2, 4] = 1
 
 # 3
 three = np.full((10, 10), -1)
-three[0, 1:9] = three[4, 1:9] = three[8, 1:9] = 1
-three[0:9, 8] = 1
+three[0:2, 0:10] = three[4:6, 0:10] = three[8:10, 0:10] = 1
+three[0:10, 8:10] = 1
 
 # 4
 four = np.full((10, 10), -1)
-four[1:8, 6] = 1      # Right vertical
-four[4, 3:7] = 1      # Horizontal middle bar
-four[1:5, 3] = 1      # Left vertical
+four[0:10, 5:7] = 1      # Right vertical
+four[4:6, 0:7] = 1      # Horizontal middle bar
+four[0:5, 0:2] = 1      # Left vertical
 
 # 5
 five = np.full((10, 10), -1)
-five[2, 3:8] = 1        # Top bar
-five[3:5, 3] = 1        # Top-left vertical
-five[5, 3:8] = 1        # Middle bar
-five[6:8, 7] = 1        # Bottom-right vertical
-five[8, 3:8] = 1        # Bottom bar
+five[0, 3:10] = 1        # Top bar
+five[0:3, 3] = 1        # Top-left vertical
+five[3, 3:8] = 1        # Middle bar
+five[4, 8] = 1
+five[5:7, 9] = 1        # Bottom-right vertical
+five[8, 4:8] = 1        # Bottom bar
+five[7, 8] = 1   
+five[7, 3] = 1       
 
 # 6
 six = np.full((10, 10), -1)
-six[1, 3:8] = 1       # Top bar
-six[2:4, 3] = 1       # Top-left vertical
-six[4, 3:8] = 1       # Middle bar
-six[5:7, 3] = 1       # Bottom-left vertical
-six[5:7, 7] = 1       # Bottom-right vertical
-six[7, 3:8] = 1       # Bottom bar
+six[9, 3:10] = 1
+six[5, 3:10] = 1
+six[1, 3:10] = 1
+six[1:10, 3] = 1
+six[5:10, 9] = 1
 
 # 7
 seven = np.full((10, 10), -1)
-seven[1, 2:8] = 1    # Top bar
-seven[2, 7] = 1    
-seven[3, 6] = 1    
-seven[4, 5] = 1    
-seven[5, 4] = 1    
-seven[6, 4] = 1    
-seven[7, 4] = 1    
+seven[0, 0:8] = 1    # Top bar
+seven[1, 7] = 1    
+seven[2, 6] = 1    
+seven[3, 5] = 1    
+seven[4, 4] = 1    
+seven[5:9, 3] = 1    
 
 # 8
 eight = np.full((10, 10), -1)
-eight[1, 2:8] = 1      # Top bar
-eight[2:4, 2] = 1      # Top-left vertical
-eight[4, 2:8] = 1      # Middle bar
-eight[5:7, 2] = 1      # Bottom-left vertical
-eight[7, 2:8] = 1      # Bottom bar
-eight[2:4, 7] = 1      # Top-right vertical
-eight[5:7, 7] = 1      # Bottom-right vertical
+eight[0, 0:7] = 1      # Top bar
+eight[4, 0:7] = 1     
+eight[8, 0:7] = 1    
+eight[0:8,0] = 1
+eight[0:8,6] = 1
+
 
 # 9
 nine = np.full((10, 10), -1)
-nine[1, 2:8] = 1       # Top bar
-nine[2:4, 7] = 1       # Top-right vertical
-nine[4, 2:8] = 1       # Middle bar
-nine[5:7, 7] = 1       # Bottom-right vertical
-nine[7, 2:8] = 1       # Bottom bar
-nine[2:4, 2] = 1       # Top-left vertical
+nine[0, 3:9] = 1       # Top bar
+nine[4, 3:9] = 1
+nine[0:10, 8] = 1
+nine[0:4, 3] = 1
 
 # A
 A = np.full((10, 10), -1)
-A[1, 3:7] = 1         # Top bar
-A[2:6, 2] = 1         # Left vertical
-A[2:6, 7] = 1         # Right vertical
-A[3, 3:7] = 1         # Middle bar
+A[1, 6:8] = 1         # Top bar
+A[2,5] = 1
+A[2,8] = 1
+A[3:10, 4] = 1         # Left vertical
+A[3:10, 9] = 1         # Right vertical
+A[5, 4:9] = 1         # Middle bar
+
 # B
 B = np.full((10, 10), -1)
-B[2:9, 3] = 1         # Left vertical
-B[2, 3:8] = 1          # Top bar
-B[5, 3:8] = 1          # Middle bar
-B[8, 3:8] = 1          # Bottom bar
-B[3:5, 8] = 1          # Top-right vertical
-B[6:8, 8] = 1          # Bottom-right vertical
+B[1:10, 0] = 1         # Left vertical
+B[1, 0:6] = 1          # Top bar
+B[5, 0:6] = 1          # Middle bar
+B[9, 0:6] = 1          # Bottom bar
+B[2:5, 6] = 1  
+B[6:9, 6] = 1      
 
 # C
 C = np.full((10, 10), -1)
-C[0, 1:9] = C[9, 1:9] = C[1:9, 0] = 1
+C[0, 2:9] = C[9, 2:9] = C[2:8, 0] = 1
+C[1, 9] = 1
+C[8, 9] = 1
+C[1, 1] = 1
+C[8, 1] = 1
 
 # D
 D = np.full((10, 10), -1)
-D[2:9, 3] = 1          # Left vertical
-D[2, 3:7] = 1          # Top bar
-D[8, 3:7] = 1          # Bottom bar
-D[3:8, 7] = 1          # Right curve
+D[0:9, 3] = 1          # Left vertical
+D[0, 3:9] = 1          # Top bar
+D[8, 3:9] = 1          # Bottom bar
+D[1:8, 9] = 1          # Right curve
 
 # E
 E = np.full((10, 10), -1)
-E[0, 0:9] = E[4, 1:9] = E[9, 1:9] = E[1:10, 0] = 1
+E[1, 1:10] = E[5, 1:10] = E[9, 1:10] = E[1:10, 1] = 1
 
 # F
 F = np.full((10, 10), -1)
-F[0, 0:9] = F[4, 1:9] = F[1:10, 0] = 1
+F[0, 0:9] = F[4, 1:8] = F[1:10, 0] = 1
 
 # G
 G = np.full((10, 10), -1)
-G[0, 0:9] = G[9, 0:9] = G[1:9, 0] = G[5, 6:9] = 1
-G[5:9, 8] = 1
+G[0, 1:9] = G[8, 1:9] = G[1:8, 0] = G[4, 5:9] = 1
+G[4:9, 8] = 1
 
 # H
 H = np.full((10, 10), -1)
-H[1:9, 1] = H[1:9, 8] = H[4, 1:9] = 1
+H[0:10, 8:10] = 1
+H[0:10, 2:4] = 1
+H[4:6, 2:10] = 1
 
 # I
 I = np.full((10, 10), -1)
-I[1:9, 5] = 1
-I[9, 2:9] = 1
-I[1, 2:9] = 1
+I[8:10, 2:10] = 1
+I[0:2, 2:10] = 1
+I[0:10, 5:7] = 1
 
 # J
 J = np.full((10, 10), -1)
-J[2, 3:9] = 1          # Top bar
-J[3:8, 6] = 1          # Right vertical
-J[8, 3:7] = 1          # Bottom curve
-J[7:8, 3] = 1          # Bottom-left vertical
+J[7:10, 0] = 1
+J[9, 1:5] = 1
+J[1:10, 4] = 1
+J[1, 1:8] = 1
 
 # K
 K = np.full((10, 10), -1)
-K[2:9, 3] = 1            # Left vertical
-K[4, 5] = 1              # Upper diagonal
-K[3, 6] = 1
-K[2, 7] = 1
-K[6, 5] = 1              # Lower diagonal
-K[7, 6] = 1
-K[8, 7] = 1
-K[5, 3:5] = 1
+K[0:9, 0] = 1
+K[4, 1] = 1
+K[5, 2] = 1
+K[6, 3] = 1
+K[7, 4] = 1
+K[8, 5] = 1
+K[3, 2] = 1
+K[2, 3] = 1
+K[1, 4] = 1
+K[0, 5] = 1
 
 # L
 L = np.full((10, 10), -1)
-L[0:10, 0] = L[9, 0:8] = 1
+L[0:10, 2] = L[9, 2:10] = 1
 
 # M
 M = np.full((10, 10), -1)
-M[2:8, 2] = 1            # Left vertical
-M[2:8, 8] = 1            # Right vertical
-M[2, 3] = 1              # Left diagonal peak
-M[3, 4] = 1
-M[4, 5] = 1
-M[3, 6] = 1
-M[2, 7] = 1
+M[1:10, 9] = 1            # Right vertical
+M[2, 8] = 1
+M[3, 7] = 1
+M[4, 6] = 1
+M[5, 5] = 1
+M[4, 4] = 1
+M[3, 3] = 1
+M[2, 2] = 1
+M[1:10, 1] = 1
 
 # N
 N = np.full((10, 10), -1)
-N[2:9, 2] = 1           # Left vertical
-N[2:9, 8] = 1           # Right vertical
-N[2, 2] = 1             # Diagonal from top-left to bottom-right
-N[3, 3] = 1
-N[4, 4] = 1
-N[5, 5] = 1
-N[6, 6] = 1
-N[7, 7] = 1
-N[8, 8] = 1
+N[1:10, 0] = 1           # Left vertical
+N[1:10, 7] = 1           # Right vertical
+N[2, 1] = 1             # Diagonal from top-left to bottom-right
+N[3, 2] = 1
+N[4, 3] = 1
+N[5, 4] = 1
+N[6, 5] = 1
+N[7, 6] = 1
+N[8, 7] = 1
+
+i=24
 
 # O
 O = np.full((10, 10), -1)
@@ -236,7 +258,6 @@ U[2:9, 2] = 1          # Left vertical
 U[2:9, 8] = 1          # Right vertical
 U[8, 3:8] = 1          # Bottom bar
 
-i=35
 # V
 V = np.full((10, 10), -1)
 V[1:5, 1] = 1            # Left side of V
@@ -291,7 +312,6 @@ Z[6, 4] = 1
 Z[7, 3] = 1            # Bottom-left diagonal
 Z[8, 3:8] = 1          # Bottom bar
 
-i = 52
 
 blank = np.array([
     [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
@@ -527,7 +547,313 @@ pattern_names = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 
             'darrow', 'larrow', 'star', 'hash', 'plus', 'minus', 'div', 'exclamation', 'question', 'interrobang',
             'bangbang']
 
+# 0
+zero_old = np.full((10, 10), -1)
+zero_old[2, 3:8] = 1
+zero_old[8, 3:8] = 1
+zero_old[3:8, 3] = 1
+zero_old[3:8, 7] = 1
+zero_old[3, 7] = 1
+zero_old[4, 6] = 1
+zero_old[5, 5] = 1
+zero_old[6, 4] = 1
+zero_old[7, 3] = 1
+
+# 1
+one_old = np.full((10, 10), -1)
+one_old[0:10, 4] = 1
+one_old[9, 2:7] = 1
+one_old[1, 3] = 1
+one_old[2, 2] = 1
+
+# 2
+two_old = np.full((10, 10), -1)
+two_old[1, 2:8] = 1
+two_old[2:4, 7] = 1
+two_old[4, 2:8] = 1
+two_old[5:7, 2] = 1
+two_old[7, 2:8] = 1
+
+# 3
+three_old = np.full((10, 10), -1)
+three_old[0, 1:9] = three_old[4, 1:9] = three_old[8, 1:9] = 1
+three_old[0:9, 8] = 1
+
+# 4
+four_old = np.full((10, 10), -1)
+four_old[1:8, 6] = 1
+four_old[4, 3:7] = 1
+four_old[1:5, 3] = 1
+
+# 5
+five_old = np.full((10, 10), -1)
+five_old[2, 3:8] = 1
+five_old[3:5, 3] = 1
+five_old[5, 3:8] = 1
+five_old[6:8, 7] = 1
+five_old[8, 3:8] = 1
+
+# 6
+six_old = np.full((10, 10), -1)
+six_old[1, 3:8] = 1
+six_old[2:4, 3] = 1
+six_old[4, 3:8] = 1
+six_old[5:7, 3] = 1
+six_old[5:7, 7] = 1
+six_old[7, 3:8] = 1
+
+# 7
+seven_old = np.full((10, 10), -1)
+seven_old[1, 2:8] = 1
+seven_old[2, 7] = 1
+seven_old[3, 6] = 1
+seven_old[4, 5] = 1
+seven_old[5, 4] = 1
+seven_old[6, 4] = 1
+seven_old[7, 4] = 1
+
+# 8
+eight_old = np.full((10, 10), -1)
+eight_old[1, 2:8] = 1
+eight_old[2:4, 2] = 1
+eight_old[4, 2:8] = 1
+eight_old[5:7, 2] = 1
+eight_old[7, 2:8] = 1
+eight_old[2:4, 7] = 1
+eight_old[5:7, 7] = 1
+
+# 9
+nine_old = np.full((10, 10), -1)
+nine_old[1, 2:8] = 1
+nine_old[2:4, 7] = 1
+nine_old[4, 2:8] = 1
+nine_old[5:7, 7] = 1
+nine_old[7, 2:8] = 1
+nine_old[2:4, 2] = 1
+
+# A
+A_old = np.full((10, 10), -1)
+A_old[1, 3:7] = 1
+A_old[2:6, 2] = 1
+A_old[2:6, 7] = 1
+A_old[3, 3:7] = 1
+
+# B
+B_old = np.full((10, 10), -1)
+B_old[2:9, 3] = 1
+B_old[2, 3:8] = 1
+B_old[5, 3:8] = 1
+B_old[8, 3:8] = 1
+B_old[3:5, 8] = 1
+B_old[6:8, 8] = 1
+
+# C
+C_old = np.full((10, 10), -1)
+C_old[0, 1:9] = C_old[9, 1:9] = C_old[1:9, 0] = 1
+
+# D
+D_old = np.full((10, 10), -1)
+D_old[2:9, 3] = 1
+D_old[2, 3:7] = 1
+D_old[8, 3:7] = 1
+D_old[3:8, 7] = 1
+
+# E
+E_old = np.full((10, 10), -1)
+E_old[0, 0:9] = E_old[4, 1:9] = E_old[9, 1:9] = E_old[1:10, 0] = 1
+
+# F
+F_old = np.full((10, 10), -1)
+F_old[0, 0:9] = F_old[4, 1:9] = F_old[1:10, 0] = 1
+
+# G
+G_old = np.full((10, 10), -1)
+G_old[0, 0:9] = G_old[9, 0:9] = G_old[1:9, 0] = G_old[5, 6:9] = 1
+G_old[5:9, 8] = 1
+
+# H
+H_old = np.full((10, 10), -1)
+H_old[1:9, 1] = H_old[1:9, 8] = H_old[4, 1:9] = 1
+
+# I
+I_old = np.full((10, 10), -1)
+I_old[1:9, 5] = 1
+I_old[9, 2:9] = 1
+I_old[1, 2:9] = 1
+
+# J
+J_old = np.full((10, 10), -1)
+J_old[2, 3:9] = 1
+J_old[3:8, 6] = 1
+J_old[8, 3:7] = 1
+J_old[7:8, 3] = 1
+
+# K
+K_old = np.full((10, 10), -1)
+K_old[2:9, 3] = 1
+K_old[4, 5] = 1
+K_old[3, 6] = 1
+K_old[2, 7] = 1
+K_old[6, 5] = 1
+K_old[7, 6] = 1
+K_old[8, 7] = 1
+K_old[5, 3:5] = 1
+
+# L
+L_old = np.full((10, 10), -1)
+L_old[0:10, 0] = L_old[9, 0:8] = 1
+
+# M
+M_old = np.full((10, 10), -1)
+M_old[2:8, 2] = 1
+M_old[2:8, 8] = 1
+M_old[2, 3] = 1
+M_old[3, 4] = 1
+M_old[4, 5] = 1
+M_old[3, 6] = 1
+M_old[2, 7] = 1
+
+# N
+N_old = np.full((10, 10), -1)
+N_old[2:9, 2] = 1
+N_old[2:9, 8] = 1
+N_old[2, 2] = 1
+N_old[3, 3] = 1
+N_old[4, 4] = 1
+N_old[5, 5] = 1
+N_old[6, 6] = 1
+N_old[7, 7] = 1
+N_old[8, 8] = 1
+
+# O
+O_old = np.full((10, 10), -1)
+O_old[2, 4:7] = 1
+O_old[3, 3] = 1
+O_old[3, 7] = 1
+O_old[4:7, 2] = 1
+O_old[4:7, 8] = 1
+O_old[7, 3] = 1
+O_old[7, 7] = 1
+O_old[8, 4:7] = 1
+
+# P
+P_old = np.full((10, 10), -1)
+P_old[2:9, 3] = 1
+P_old[2, 3:8] = 1
+P_old[5, 3:8] = 1
+P_old[3:5, 7] = 1
+
+# Q
+Q_old = np.full((10, 10), -1)
+Q_old[1, 1:8] = 1
+Q_old[7, 1:8] = 1
+Q_old[1:7, 1] = 1
+Q_old[1:7, 7] = 1
+Q_old[8, 7:9] = 1
+
+# R
+R_old = np.full((10, 10), -1)
+R_old[2:9, 3] = 1
+R_old[2, 3:6] = 1
+R_old[5, 3:6] = 1
+R_old[3:5, 6] = 1
+R_old[6, 4] = 1
+R_old[7, 5] = 1
+R_old[8, 6] = 1
+
+# S
+S_old = np.full((10, 10), -1)
+S_old[2, 3:8] = 1
+S_old[3:5, 3] = 1
+S_old[5, 3:8] = 1
+S_old[6:8, 7] = 1
+S_old[8, 3:8] = 1
+
+# T
+T_old = np.full((10, 10), -1)
+T_old[2, 3:8] = 1
+T_old[2:9, 5] = 1
+
+# U
+U_old = np.full((10, 10), -1)
+U_old[2:9, 2] = 1
+U_old[2:9, 8] = 1
+U_old[8, 3:8] = 1
+
+# V
+V_old = np.full((10, 10), -1)
+V_old[1:5, 1] = 1
+V_old[1:5, 8] = 1
+V_old[5, 2] = 1
+V_old[6, 3] = 1
+V_old[7, 4] = 1
+V_old[7, 5] = 1
+V_old[6, 6] = 1
+V_old[5, 7] = 1
+
+# W
+W_old = np.full((10, 10), -1)
+W_old[1:8, 1] = 1
+W_old[1:8, 9] = 1
+W_old[6, 2] = 1
+W_old[5, 3] = 1
+W_old[4, 4] = 1
+W_old[3, 5] = 1
+W_old[4, 6] = 1
+W_old[5, 7] = 1
+W_old[6, 8] = 1
+
+# X
+X_old = np.full((10, 10), -1)
+X_old[2, 3] = 1
+X_old[3, 4] = 1
+X_old[4, 5] = 1
+X_old[5, 6] = 1
+X_old[6, 7] = 1
+X_old[6, 3] = 1
+X_old[5, 4] = 1
+X_old[3, 6] = 1
+X_old[2, 7] = 1
+
+# Y
+Y_old = np.full((10, 10), -1)
+Y_old[2, 6] = 1
+Y_old[2, 2] = 1
+Y_old[3, 3] = 1
+Y_old[3, 5] = 1
+Y_old[4, 4] = 1
+Y_old[5:8, 4] = 1
+
+# Z
+Z_old = np.full((10, 10), -1)
+Z_old[2, 3:8] = 1
+Z_old[3, 7] = 1
+Z_old[4, 6] = 1
+Z_old[5, 5] = 1
+Z_old[6, 4] = 1
+Z_old[7, 3] = 1
+Z_old[8, 3:8] = 1
+
+patterns_old = [zero_old, one_old, two_old, three_old, four_old,
+    five_old, six_old, seven_old, eight_old, nine_old,
+    A_old, B_old, C_old, D_old, E_old, F_old, G_old,
+    H_old, I_old, J_old, K_old, L_old, M_old, N_old,
+    O_old, P_old, Q_old, R_old, S_old, T_old, U_old,
+    V_old, W_old, X_old, Y_old, Z_old]
+
+pattern_names_old = [
+    "zero_old", "one_old", "two_old", "three_old", "four_old",
+    "five_old", "six_old", "seven_old", "eight_old", "nine_old",
+    "A_old", "B_old", "C_old", "D_old", "E_old", "F_old", "G_old",
+    "H_old", "I_old", "J_old", "K_old", "L_old", "M_old", "N_old",
+    "O_old", "P_old", "Q_old", "R_old", "S_old", "T_old", "U_old",
+    "V_old", "W_old", "X_old", "Y_old", "Z_old"
+]
+
+patterns = patterns + patterns_old
+pattern_names = pattern_names + pattern_names_old
+
 #for i in range(len(patterns)):
-plt.imshow(patterns[i], cmap='coolwarm', interpolation='none')
-plt.title(pattern_names[i])
-plt.show()
+#plt.imshow(patterns[i], cmap='coolwarm', interpolation='none')
+#plt.title(pattern_names[i])
+#plt.show()

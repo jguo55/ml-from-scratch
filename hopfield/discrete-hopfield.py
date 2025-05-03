@@ -12,7 +12,7 @@ class DHNN:
         np.fill_diagonal(self.wmatrix, 0)
         self.wmatrix = self.wmatrix / len(patterns)
 
-    def predict_async(self, state, num_iter=10000):
+    def predict_async(self, state, num_iter=1000):
         state = np.array(state).flatten()
         for _ in range(num_iter):
             i = np.random.randint(self.n-1)
@@ -25,7 +25,7 @@ class DHNN:
         for row in state:
             print('[ ' + ''.join('* ' if val == 1 else '  ' for val in row) + ']')
 
-indices = [16, 6, 30, 32, 14]#, 0, 18, 3, 26, 12, 11, 8, 15, 23, 17]
+indices = [18, 0, 31, 13, 4, 61, 14, 3]#, 67, 10, 17, 16, 22, 11, 64]
 candidates = [patterns[i] for i in indices]
 candidate_names = [pattern_names[i] for i in indices]
 
